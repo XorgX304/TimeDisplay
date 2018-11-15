@@ -26,11 +26,17 @@ class TimeDisplay{
 
         switch(type){
             case 0: {  strings = [" sec"," secs"]; } break;
+            case "s": {  strings = [" sec"," secs"]; } break;
             case 1: {  strings = [" min"," mins"]; } break;
+            case "m": {  strings = [" min"," mins"]; } break;
             case 2: {  strings = [" hour"," hours"]; } break;
+            case "h": {  strings = [" hour"," hours"]; } break;
             case 3: {  strings = [" day"," days"]; } break;
+            case "d": {  strings = [" day"," days"]; } break;
             case 4: {  strings = [" month"," months"]; } break;
+            case "m": {  strings = [" month"," months"]; } break;
             case 5: {  strings = [" year"," years"]; } break;
+            case "y": {  strings = [" year"," years"]; } break;
         }
 
 
@@ -39,6 +45,29 @@ class TimeDisplay{
         }
 
         return strings[1];
+        
+    }
+    
+
+    /**
+     * 
+     * @param {*} aType The main unit of time type. e.g Minutes(aType)
+     * @param {*} aValue The value of above.
+     * @param {*} bType  The second unit of time type. e.g Minutes(aType) and Seconds(bType), bType is ignored if the value is 0.
+     * @param {*} bValue The value of above.
+     */
+    getDefaultString(aType, aValue, bType ,bValue){
+
+        let altString = "";
+        let string = "";
+
+        if(bValue > 0){
+            altString = this.getUnitString(bType,bValue);
+        }else{
+            return aValue+this.getUnitString(aType,aValue);
+        }
+        
+        return aValue+this.getUnitString(aType,aValue)+" "+bValue+altString;   
         
     }
 
@@ -67,34 +96,19 @@ class TimeDisplay{
                         if(currentMinutes <= 0){
                              return currentSeconds+this.getUnitString(0,currentSeconds);          
                         }else{
-                            if(currentSeconds > 0){
-                                secondString = this.getUnitString(0,currentSeconds);
-                            }
-                            return currentMinutes+this.getUnitString(1,currentMinutes)+" "+currentSeconds+secondString;   
+                            return this.getDefaultString("m",currentMinutes,"s",currentSeconds);  
                         }
                     }else{
-                        if(currentMinutes > 0){
-                            secondString = this.getUnitString(1,currentMinutes);
-                        }
-                        return currentHours+this.getUnitString(2,currentHours)+" "+currentMinutes+secondString; 
+                        return this.getDefaultString("h",currentHours,"m",currentMinutes); 
                     }
                 }else{
-                    if(currentHours > 0){
-                        secondString = this.getUnitString(2,currentHours);
-                    }
-                    return currentDays+this.getUnitString(3,currentDays)+" "+currentHours+secondString; 
+                    return this.getDefaultString("d",currentDays,"h",currentHours); 
                 }
             }else{
-                if(currentDays > 0){
-                    secondString = this.getUnitString(3,currentDays);
-                }
-                return currentMonths+this.getUnitString(4,currentMonths)+" "+currentDays+secondString; 
+                return this.getDefaultString("m",currentDays,"d",currentHours);
             }
         }else{
-            if(currentMonths > 0){
-                secondString = this.getUnitString(4,currentMonths);
-            }
-            return currentYears+this.getUnitString(5,currentYears)+" "+currentMonths+secondString; 
+            return this.getDefaultString("d",currentYears,"h",currentMonths);
         }
     }
 }
