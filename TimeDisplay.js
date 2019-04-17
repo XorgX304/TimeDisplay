@@ -1,6 +1,7 @@
 /**
  * Created by Scott Adkin 14th June 2018
  * Simple class to convert unix epoch times to strings
+ * Updated 17th April 2019: fixed 2 mistakes/typos 
  */
 class TimeDisplay{
 
@@ -34,7 +35,7 @@ class TimeDisplay{
             case 3: {  strings = [" day"," days"]; } break;
             case "d": {  strings = [" day"," days"]; } break;
             case 4: {  strings = [" month"," months"]; } break;
-            case "m": {  strings = [" month"," months"]; } break;
+            case "mo": {  strings = [" month"," months"]; } break;
             case 5: {  strings = [" year"," years"]; } break;
             case "y": {  strings = [" year"," years"]; } break;
         }
@@ -87,13 +88,12 @@ class TimeDisplay{
         const currentMonths = Math.floor((this.time / month) % 12);
         const currentYears = Math.floor(this.time / year);
 
-        let secondString = "";
 
-        if(currentYears <= 0){
-            if(currentMonths <= 0){
-                if(currentDays <= 0){
-                    if(currentHours <= 0){
-                        if(currentMinutes <= 0){
+        if(currentYears == 0){
+            if(currentMonths == 0){
+                if(currentDays == 0){
+                    if(currentHours == 0){
+                        if(currentMinutes == 0){
                              return currentSeconds+this.getUnitString(0,currentSeconds);          
                         }else{
                             return this.getDefaultString("m",currentMinutes,"s",currentSeconds);  
@@ -105,7 +105,7 @@ class TimeDisplay{
                     return this.getDefaultString("d",currentDays,"h",currentHours); 
                 }
             }else{
-                return this.getDefaultString("m",currentDays,"d",currentHours);
+                return this.getDefaultString("mo",currentMonths,"d",currentHours);
             }
         }else{
             return this.getDefaultString("d",currentYears,"h",currentMonths);
