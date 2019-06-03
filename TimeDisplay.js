@@ -108,7 +108,7 @@ class TimeDisplay{
                 return this.getDefaultString("mo",currentMonths,"d",currentHours);
             }
         }else{
-            return this.getDefaultString("d",currentYears,"h",currentMonths);
+            return this.getDefaultString("y",currentYears,"mo",currentMonths);
         }
     }
 }
