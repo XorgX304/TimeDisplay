@@ -1,7 +1,6 @@
 /**
  * Created by Scott Adkin 14th June 2018
  * Simple class to convert unix epoch times to strings
- * Updated 17th April 2019: fixed 2 mistakes/typos 
  */
 class TimeDisplay{
 
@@ -12,11 +11,17 @@ class TimeDisplay{
         if(typeof time !== "number"){
             throw new Error("Argument passed to TimeDisplay constructor was not a number!");
         }
+
+        this.inputValue = time;
               
         let temp = new Date();
         this.now = Math.floor(temp.getTime() / 1000)
 
         this.time = this.now - time;    
+
+        if(this.time < 0){
+            this.time = 0;
+        }
     }
 
     getUnitString(type, value){
@@ -72,7 +77,8 @@ class TimeDisplay{
         
     }
 
-    timeString(){
+    //bAlt is whether you want to compare to the currentTime and return string or jsut convert the inputvalue(seconds) to a string
+    timeString(bAlt){
 
         const minute = 60;
         const hour = minute * 60;
@@ -81,13 +87,36 @@ class TimeDisplay{
         const month = week * 4;
         const year = day * 365;
 
-        const currentSeconds = Math.floor(this.time % 60);
-        const currentMinutes = Math.floor((this.time / minute) % 60);
-        const currentHours = Math.floor((this.time / hour) % 24);
-        const currentDays = Math.floor((this.time / day) % 28);
-        const currentMonths = Math.floor((this.time / month) % 12);
-        const currentYears = Math.floor(this.time / year);
+        let currentSeconds = 0;
+        let currentMinutes = 0;
+        let currentHours = 0;
+        let currentDays = 0;
+        let currentMonths = 0;
+        let currentYears = 0;
+        
 
+
+        if(arguments.length == 0){
+            currentSeconds = Math.floor(this.time % 60);
+            currentMinutes = Math.floor((this.time / minute) % 60);
+            currentHours = Math.floor((this.time / hour) % 24);
+            currentDays = Math.floor((this.time / day) % 28);
+            currentMonths = Math.floor((this.time / month) % 12);
+            currentYears = Math.floor(this.time / year);
+        }else if(bAlt){
+            currentSeconds = Math.floor(this.inputValue % 60);
+            currentMinutes = Math.floor((this.inputValue / minute) % 60);
+            currentHours = Math.floor((this.inputValue / hour) % 24);
+            currentDays = Math.floor((this.inputValue / day) % 28);
+            currentMonths = Math.floor((this.inputValue / month) % 12);
+            currentYears = Math.floor(this.inputValue / year);
+        }
+
+        if(!bAlt && this.time <= 0){
+            return "Just now";
+        }
+
+        console.log(currentDays);
 
         if(currentYears == 0){
             if(currentMonths == 0){
@@ -105,10 +134,12 @@ class TimeDisplay{
                     return this.getDefaultString("d",currentDays,"h",currentHours); 
                 }
             }else{
-                return this.getDefaultString("mo",currentMonths,"d",currentHours);
+                return this.getDefaultString("mo",currentMonths,"d",currentDays);
             }
         }else{
             return this.getDefaultString("y",currentYears,"mo",currentMonths);
         }
     }
 }
+
+
